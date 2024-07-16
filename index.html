@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rhythm Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .control-panel {
+            margin-bottom: 20px;
+        }
+        #osmd-container {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ccc;
+        }
+        #error-message {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+    <script src="opensheetmusicdisplay.min.js"></script>
+</head>
+<body>
+    <div class="control-panel">
+        <label for="timeSignature">Time Signature:</label>
+        <select id="timeSignature">
+            <option value="4/4">4/4</option>
+            <option value="3/4">3/4</option>
+            <option value="6/8">6/8</option>
+        </select>
+
+        <label for="numberOfBars">Number of Bars:</label>
+        <input type="number" id="numberOfBars" min="1" max="16" value="4">
+
+        <label for="showStave">
+            <input type="checkbox" id="showStave" checked>
+            Show Stave
+        </label>
+
+        <button id="generateRhythms">Generate Rhythms</button>
+    </div>
+
+    <div id="error-message"></div>
+    <div id="osmd-container"></div>
+
+    <script>
+        const NoteType = {
+            QUARTER: 'quarter',
+            EIGHTH: 'eighth',
+            SIXTEENTH: 'sixteenth',
+            DOTTED_QUARTER: 'dottedQuarter',
+            TRIPLET_EIGHTH: 'tripletEighth',
+            QUARTER_REST: 'quarterRest',
+            EIGHTH_REST: 'eighthRest',
+            SIXTEENTH_REST: 'sixteenthRest',
+            HALF_REST: 'halfRest',
+            WHOLE_REST: 'wholeRest',
+            DOTTED_QUARTER_REST: 'dottedQuarterRest',
+            TRIPLET_EIGHTH_REST: 'tripletEighthRest'
+        };
+
+        const NoteGroup = {
+            SINGLE: 'single',
+            BEAM: 'beam',
+            TRIPLET: 'triplet'
+        };
+
+        class TimeSignature {
+            constructor(beats, beatType) {
+                this.beats = beats;
+                this.beatType = beatType;
+                this.predefinedMeasures = this.generatePredefinedMeasures();
+            }
+
+            generatePredefinedMeasures() {
+                switch(`${this.beats}/${this.beatType}`) {
+                    case '4/4':
+                        return [
+                            [{type: NoteGroup.SINGLE, note: NoteType.QUARTER_REST}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER}],
+                            [{type: NoteGroup.SINGLE, note: NoteType.QUARTER}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER_REST}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER}],
+                            [{type: NoteGroup.SINGLE, note: NoteType.HALF_REST}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER}],
+                            [{type: NoteGroup.SINGLE, note: NoteType.WHOLE_REST}],
+                            [{type: NoteGroup.BEAM, notes: [NoteType.EIGHTH, NoteType.EIGHTH]}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER_REST}, {type: NoteGroup.BEAM, notes: [NoteType.EIGHTH, NoteType.EIGHTH]}],
+                            [{type: NoteGroup.BEAM, notes: [NoteType.SIXTEENTH, NoteType.SIXTEENTH]}, {type: NoteGroup.SINGLE, note: NoteType.EIGHTH_REST}, {type: NoteGroup.BEAM, notes: [NoteType.SIXTEENTH, NoteType.SIXTEENTH]}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER}],
+                            [{type: NoteGroup.SINGLE, note: NoteType.QUARTER}, {type: NoteGroup.BEAM, notes: [NoteType.SIXTEENTH, NoteType.SIXTEENTH]}, {type: NoteGroup.SINGLE, note: NoteType.SIXTEENTH_REST}, {type: NoteGroup.BEAM, notes: [NoteType.SIXTEENTH, NoteType.SIXTEENTH]}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER}]
+                        ];
+                    case '3/4':
+                        return [
+                            [{type: NoteGroup.SINGLE, note: NoteType.QUARTER_REST}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER}],
+                            [{type: NoteGroup.SINGLE, note: NoteType.QUARTER}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER_REST}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER}],
+                            [{type: NoteGroup.SINGLE, note: NoteType.HALF_REST}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER}],
+                            [{type: NoteGroup.BEAM, notes: [NoteType.EIGHTH, NoteType.EIGHTH]}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER_REST}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER}],
+                            [{type: NoteGroup.BEAM, notes: [NoteType.SIXTEENTH, NoteType.SIXTEENTH]}, {type: NoteGroup.SINGLE, note: NoteType.EIGHTH_REST}, {type: NoteGroup.BEAM, notes: [NoteType.SIXTEENTH, NoteType.SIXTEENTH]}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER}],
+                            [{type: NoteGroup.SINGLE, note: NoteType.QUARTER_REST}, {type: NoteGroup.BEAM, notes: [NoteType.SIXTEENTH, NoteType.SIXTEENTH]}, {type: NoteGroup.SINGLE, note: NoteType.SIXTEENTH_REST}, {type: NoteGroup.BEAM, notes: [NoteType.SIXTEENTH, NoteType.SIXTEENTH]}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER}]
+                        ];
+                    case '6/8':
+                        return [
+                            [{type: NoteGroup.SINGLE, note: NoteType.DOTTED_QUARTER_REST}, {type: NoteGroup.SINGLE, note: NoteType.DOTTED_QUARTER}],
+                            [{type: NoteGroup.SINGLE, note: NoteType.DOTTED_QUARTER}, {type: NoteGroup.SINGLE, note: NoteType.DOTTED_QUARTER_REST}],
+                            [{type: NoteGroup.SINGLE, note: NoteType.QUARTER_REST}, {type: NoteGroup.SINGLE, note: NoteType.EIGHTH}, {type: NoteGroup.BEAM, notes: [NoteType.QUARTER, NoteType.EIGHTH]}],
+                            [{type: NoteGroup.BEAM, notes: [NoteType.QUARTER, NoteType.EIGHTH]}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER_REST}, {type: NoteGroup.SINGLE, note: NoteType.EIGHTH}],
+                            [{type: NoteGroup.BEAM, notes: [NoteType.EIGHTH, NoteType.EIGHTH]}, {type: NoteGroup.SINGLE, note: NoteType.EIGHTH_REST}, {type: NoteGroup.BEAM, notes: [NoteType.EIGHTH, NoteType.EIGHTH, NoteType.EIGHTH]}],
+                            [{type: NoteGroup.BEAM, notes: [NoteType.SIXTEENTH, NoteType.SIXTEENTH, NoteType.SIXTEENTH]}, {type: NoteGroup.SINGLE, note: NoteType.SIXTEENTH_REST}, {type: NoteGroup.BEAM, notes: [NoteType.SIXTEENTH, NoteType.SIXTEENTH]}, {type: NoteGroup.BEAM, notes: [NoteType.QUARTER, NoteType.EIGHTH]}],
+                            [{type: NoteGroup.BEAM, notes: [NoteType.QUARTER, NoteType.EIGHTH]}, {type: NoteGroup.BEAM, notes: [NoteType.SIXTEENTH, NoteType.SIXTEENTH, NoteType.SIXTEENTH]}, {type: NoteGroup.SINGLE, note: NoteType.SIXTEENTH_REST}, {type: NoteGroup.BEAM, notes: [NoteType.SIXTEENTH, NoteType.SIXTEENTH]}]
+                        ];
+                    default:
+                        return [[{type: NoteGroup.SINGLE, note: NoteType.WHOLE_REST}]];
+                }
+            }
+        }
+
+        class RhythmGenerator {
+            constructor() {
+                this.osmd = new opensheetmusicdisplay.OpenSheetMusicDisplay("osmd-container", {
+                    drawTitle: false,
+                    drawPartNames: false,
+                    drawMeasureNumbers: false,
+                    drawTimeSignatures: true,
+                    drawingParameters: "compact"
+                });
+
+                this.setupEventListeners();
+            }
+
+            setupEventListeners() {
+                document.getElementById('generateRhythms').addEventListener('click', () => this.generateRhythms());
+                document.getElementById('showStave').addEventListener('change', (e) => this.updateStaveVisibility(e.target.checked));
+            }
+
+            generateRhythms() {
+                const timeSignature = document.getElementById('timeSignature').value;
+                const numberOfBars = parseInt(document.getElementById('numberOfBars').value);
+                const showStave = document.getElementById('showStave').checked;
+
+                const [beats, beatType] = timeSignature.split('/').map(Number);
+                const ts = new TimeSignature(beats, beatType);
+
+                const measures = Array(numberOfBars).fill().map(() =>
+                    ts.predefinedMeasures[Math.floor(Math.random() * ts.predefinedMeasures.length)]
+                );
+
+                const musicXML = this.createMusicXML(measures, ts);
+                this.loadMusicXML(musicXML, showStave);
+            }
+
+            createMusicXML(measures, timeSignature) {
+                let xml = `
+                    <?xml version="1.0" encoding="UTF-8"?>
+                    <!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.1 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">
+                    <score-partwise version="3.1">
+                    <part-list>
+                        <score-part id="P1">
+                        <part-name>Music</part-name>
+                        </score-part>
+                    </part-list>
+                    <part id="P1">
+                `;
+
+                measures.forEach((measure, index) => {
+                    xml += `<measure number="${index + 1}">`;
+                    if (index === 0) {
+                        xml += `
+                            <attributes>
+                            <divisions>4</divisions>
+                            <time>
+                                <beats>${timeSignature.beats}</beats>
+                                <beat-type>${timeSignature.beatType}</beat-type>
+                            </time>
+                            <clef>
+                                <sign>G</sign>
+                                <line>2</line>
+                            </clef>
+                            </attributes>
+                        `;
+                    }
+
+                    measure.forEach(group => {
+                        switch (group.type) {
+                            case NoteGroup.SINGLE:
+                                xml += this.createNoteXML(group.note);
+                                break;
+                            case NoteGroup.BEAM:
+                                group.notes.forEach((note, i) => {
+                                    xml += this.createNoteXML(note, i === 0 ? 'begin' : i === group.notes.length - 1 ? 'end' : 'continue');
+                                });
+                                break;
+                            case NoteGroup.TRIPLET:
+                                group.notes.forEach((note, i) => {
+                                    xml += this.createNoteXML(note, i === 0 ? 'begin' : i === group.notes.length - 1 ? 'end' : 'continue', true);
+                                });
+                                break;
+                        }
+                    });
+
+                    xml += '</measure>';
+                });
+
+                xml += '</part></score-partwise>';
+                return xml;
+            }
+
+            createNoteXML(note, beam = null, inTriplet = false) {
+                let duration, type, dotTag = '', timeModificationTag = '', restTag = '';
+                
+                switch (note) {
+                case NoteType.QUARTER:
+                case NoteType.QUARTER_REST:
+                    duration = 4;
+                    type = 'quarter';
+                    break;
+                case NoteType.EIGHTH:
+                case NoteType.EIGHTH_REST:
+                    duration = 2;
+                    type = 'eighth';
+                    break;
+                case NoteType.SIXTEENTH:
+                case NoteType.SIXTEENTH_REST:
+                    duration = 1;
+                    type = '16th';
+                    break;
+                case NoteType.DOTTED_QUARTER:
+                case NoteType.DOTTED_QUARTER_REST:
+                    duration = 6;
+                    type = 'quarter';
+                    dotTag = '<dot/>';
+                    break;
+                case NoteType.TRIPLET_EIGHTH:
+                case NoteType.TRIPLET_EIGHTH_REST:
+                    duration = 2;
+                    type = 'eighth';
+                    timeModificationTag = `
+                    <time-modification>
+                    <actual-notes>3</actual-notes>
+                    <normal-notes>2</normal-notes>
+                    </time-modification>
+                    `;
+                    break;
+                case NoteType.HALF_REST:
+                    duration = 8;
+                    type = 'half';
+                    break;
+                case NoteType.WHOLE_REST:
+                    duration = 16;
+                    type = 'whole';
+                    break;
+                }
+                
+                if (note.includes('Rest')) {
+                    restTag = '<rest/>';
+                }
+                
+                let xml = `
+                    <note>
+                        ${restTag}
+                        <duration>${duration}</duration>
+                        <type>${type}</type>
+                        ${dotTag}
+                        ${timeModificationTag}
+                `;
+
+                if (beam && !note.includes('Rest')) {
+                    xml += `<beam number="1">${beam}</beam>`;
+                }
+                if (!note.includes('Rest')) {
+                                    xml += `
+                                        <pitch>
+                                        <step>C</step>
+                                        <octave>4</octave>
+                                        </pitch>
+                                        `;
+                                    }
+
+                                    if (inTriplet) {
+                                        xml += `
+                                            <notations>
+                                                <tuplet type="${beam === 'begin' ? 'start' : beam === 'end' ? 'stop' : ''}" number="1" bracket="yes"/>
+                                            </notations>
+                                        `;
+                                    }
+
+                                    xml += '</note>';
+                                    return xml;
+                                }
+
+                                loadMusicXML(xmlString, showStave) {
+                                    this.osmd.load(xmlString).then(() => {
+                                        this.osmd.render();
+                                        setTimeout(() => this.updateStaveVisibility(showStave), 0);
+                                    });
+                                }
+
+                                updateStaveVisibility(showStave) {
+                                    const svg = document.querySelector("#osmd-container svg");
+                                    if (!svg) return;
+
+                                    const staveLines = svg.querySelectorAll("path[stroke-width='0.5']");
+                                    const barLines = svg.querySelectorAll("path[stroke-width='1']");
+                                    const clefs = svg.querySelectorAll("g[class^='vf-clef']");
+
+                                    [staveLines, barLines, clefs].forEach(elements => {
+                                        elements.forEach(el => el.style.display = showStave ? '' : 'none');
+                                    });
+
+                                    const noteGroups = svg.querySelectorAll("g[class^='vf-stavenote']");
+                                    const otherElements = svg.querySelectorAll("g[class^='vf-time'], g[class^='vf-keysig']");
+
+                                    [noteGroups, otherElements].forEach(elements => {
+                                        elements.forEach(el => {
+                                            const currentTransform = el.getAttribute('transform');
+                                            if (currentTransform) {
+                                                const match = currentTransform.match(/translate\(([^,]+),\s*([^)]+)\)/);
+                                                if (match) {
+                                                    const x = parseFloat(match[1]);
+                                                    const y = parseFloat(match[2]);
+                                                    el.setAttribute('transform', `translate(${x}, ${showStave ? y : y - 40})`);
+                                                }
+                                            }
+                                        });
+                                    });
+                                }
+                            }
+
+                            // Initialize the app
+                            document.addEventListener('DOMContentLoaded', () => {
+                                new RhythmGenerator();
+                            });
+                        </script>
+                    </body>
+                    </html>
