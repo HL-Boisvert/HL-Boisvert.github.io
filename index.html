@@ -260,10 +260,10 @@
                                 rhythm: [{type: NoteGroup.BEAM, notes: [NoteType.EIGHTH, NoteType.EIGHTH]}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER_REST}, {type: NoteGroup.BEAM, notes: [NoteType.EIGHTH, NoteType.EIGHTH]}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER_REST}],
                                 types: ['eighth']
                             },
-                            {
-                                rhythm: [{type: NoteGroup.SINGLE, note: NoteType.QUARTER}, {type: NoteGroup.BEAM, notes: [NoteType.SIXTEENTH, NoteType.SIXTEENTH]}, {type: NoteGroup.SINGLE, note: NoteType.SIXTEENTH_REST}, {type: NoteGroup.SINGLE, note: NoteType.SIXTEENTH}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER}],
-                                types: ['sixteenth']
-                            },
+                            // {
+                            //     rhythm: [{type: NoteGroup.SINGLE, note: NoteType.QUARTER}, {type: NoteGroup.BEAM, notes: [NoteType.SIXTEENTH, NoteType.SIXTEENTH]}, {type: NoteGroup.SINGLE, note: NoteType.SIXTEENTH_REST}, {type: NoteGroup.SINGLE, note: NoteType.SIXTEENTH}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER}],
+                            //     types: ['sixteenth']
+                            // },
                             {
                                 rhythm: [{type: NoteGroup.SINGLE, note: NoteType.QUARTER}, {type: NoteGroup.TRIPLET, notes: [NoteType.TRIPLET_EIGHTH, NoteType.TRIPLET_EIGHTH, NoteType.TRIPLET_EIGHTH]}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER}, {type: NoteGroup.BEAM, notes: [NoteType.EIGHTH, NoteType.EIGHTH]}],
                                 types: ['triplet', 'eighth']
@@ -417,7 +417,7 @@
                             },
                             {
                                 rhythm: [{type: NoteGroup.SINGLE, note: NoteType.EIGHTH}, {type: NoteGroup.SINGLE, note: NoteType.DOTTED_QUARTER}, {type: NoteGroup.SINGLE, note: NoteType.QUARTER}],
-                                types: ['eighth']
+                                types: ['eighth', 'syncopated']
                             },
                             {
                                 rhythm: [{type: NoteGroup.SINGLE, note: NoteType.DOTTED_QUARTER}, {type: NoteGroup.BEAM, notes: [NoteType.EIGHTH, NoteType.EIGHTH, NoteType.EIGHTH]}],
@@ -565,14 +565,14 @@
                                 rhythm: [{type: NoteGroup.BEAM, notes: [NoteType.EIGHTH, NoteType.EIGHTH]}, {type: NoteGroup.SINGLE, note: NoteType.EIGHTH_REST}, {type: NoteGroup.BEAM, notes: [NoteType.EIGHTH, NoteType.EIGHTH, NoteType.EIGHTH]}],
                                 types: ['eighth']
                             },
-                            {
-                                rhythm: [{type: NoteGroup.BEAM, notes: [NoteType.SIXTEENTH, NoteType.SIXTEENTH, NoteType.SIXTEENTH]}, {type: NoteGroup.SINGLE, note: NoteType.SIXTEENTH_REST}, {type: NoteGroup.BEAM, notes: [NoteType.SIXTEENTH, NoteType.SIXTEENTH]}, {type: NoteGroup.BEAM, notes: [NoteType.QUARTER, NoteType.EIGHTH]}],
-                                types: ['sixteenth', 'eighth']
-                            },
-                            {
-                                rhythm: [{type: NoteGroup.BEAM, notes: [NoteType.QUARTER, NoteType.EIGHTH]}, {type: NoteGroup.BEAM, notes: [NoteType.SIXTEENTH, NoteType.SIXTEENTH, NoteType.SIXTEENTH]}, {type: NoteGroup.SINGLE, note: NoteType.SIXTEENTH_REST}, {type: NoteGroup.BEAM, notes: [NoteType.SIXTEENTH, NoteType.SIXTEENTH]}],
-                                types: ['eighth', 'sixteenth']
-                            },
+                            // {
+                            //     rhythm: [{type: NoteGroup.BEAM, notes: [NoteType.SIXTEENTH, NoteType.SIXTEENTH, NoteType.SIXTEENTH]}, {type: NoteGroup.SINGLE, note: NoteType.SIXTEENTH_REST}, {type: NoteGroup.BEAM, notes: [NoteType.SIXTEENTH, NoteType.SIXTEENTH]}, {type: NoteGroup.BEAM, notes: [NoteType.QUARTER, NoteType.EIGHTH]}],
+                            //     types: ['sixteenth', 'eighth']
+                            // },
+                            // {
+                            //     rhythm: [{type: NoteGroup.BEAM, notes: [NoteType.QUARTER, NoteType.EIGHTH]}, {type: NoteGroup.BEAM, notes: [NoteType.SIXTEENTH, NoteType.SIXTEENTH, NoteType.SIXTEENTH]}, {type: NoteGroup.SINGLE, note: NoteType.SIXTEENTH_REST}, {type: NoteGroup.BEAM, notes: [NoteType.SIXTEENTH, NoteType.SIXTEENTH]}],
+                            //     types: ['eighth', 'sixteenth']
+                            // },
                             {
                                 rhythm: [
                                     {type: NoteGroup.BEAM, notes: [NoteType.SIXTEENTH, NoteType.SIXTEENTH, NoteType.SIXTEENTH, NoteType.SIXTEENTH, NoteType.SIXTEENTH, NoteType.SIXTEENTH]},
@@ -827,7 +827,7 @@
                 if (!note.includes('Rest')) {
                                     xml += `
                                         <pitch>
-                                        <step>C</step>
+                                        <step>G</step>
                                         <octave>4</octave>
                                         </pitch>
                                         `;
