@@ -112,6 +112,16 @@
             border-color: rgb(148 163 184);
         }
 
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield; /* Firefox */
+        }
+
         input[type="number"] {
             width: 5rem;
             text-align: center;
@@ -308,11 +318,6 @@
             </div>
 
             <button id="generateRhythms" class="generate-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M9 18V5l12-2v13"></path>
-                    <circle cx="6" cy="18" r="3"></circle>
-                    <circle cx="21" cy="16" r="3"></circle>
-                </svg>
                 Generate Rhythm
             </button>
         </div>
