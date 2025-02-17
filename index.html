@@ -672,7 +672,7 @@
                 this.loadMusicXML(musicXML, showStave);
             }
 
-            generateMeasuresWithRhythmTypes(timeSignature, numberOfBars, includeEighth, includeSixteenth, includeTriplet) {
+            generateMeasuresWithRhythmTypes(timeSignature, numberOfBars, includeEighth, includeSixteenth, includeTriplet, includeSyncopation) {
                 const measures = [];
                 let availableMeasures = timeSignature.predefinedMeasures.filter(measure => {
                     if (!includeEighth && measure.types.includes('eighth')) return false;
