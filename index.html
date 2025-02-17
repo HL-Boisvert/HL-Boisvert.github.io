@@ -127,6 +127,14 @@
             gap: 0.75rem;
         }
 
+        .checkbox-label input[type="checkbox"] {
+            /* Hide the actual checkbox */
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
         .checkbox-label {
             display: flex;
             align-items: center;
@@ -136,6 +144,9 @@
             border-radius: 0.5rem;
             cursor: pointer;
             transition: all 0.2s;
+            /* Add these properties to make the entire label act as a button */
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         .checkbox-label:hover {
