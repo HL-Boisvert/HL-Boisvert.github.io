@@ -832,8 +832,7 @@
             }
 
             generateRhythms() {
-                const timeSignature = document.getElementById('timeSignature').value;
-                const numberOfBars = parseInt(document.getElementById('numberOfBars').value);
+                const timeSignature = document.querySelector('.time-signature-btn.active').getAttribute('data-value');                const numberOfBars = parseInt(document.getElementById('numberOfBars').value);
                 const includeEighth = document.getElementById('includeEighth').checked;
                 const includeSixteenth = document.getElementById('includeSixteenth').checked;
                 const includeTriplet = document.getElementById('includeTriplet').checked;
