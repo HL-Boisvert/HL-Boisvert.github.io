@@ -251,6 +251,34 @@
             overflow: auto;
         }
 
+
+        /* CSS rules */
+        @media screen and (max-width: 640px) {
+            .controls-grid {
+                grid-template-columns: 1fr;  /* Change to single column */
+                gap: 1rem;  /* Slightly reduce gap for mobile */
+            }
+
+            .control-panel {
+                padding: 1rem;  /* Slightly reduce padding for mobile */
+            }
+
+            /* Make time signature buttons stack if too narrow */
+            @media screen and (max-width: 350px) {
+                .time-signature-group {
+                    flex-direction: column;
+                    gap: 0.5rem;
+                }
+            }
+
+            /* Ensure checkbox grid stays 2 columns until very narrow screens */
+            @media screen and (max-width: 300px) {
+                .checkbox-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+        }
+
     </style>
     <script src="opensheetmusicdisplay.min.js"></script>
 </head>
